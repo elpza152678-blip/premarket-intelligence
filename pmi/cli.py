@@ -210,11 +210,12 @@ def cmd_send(a) -> int:
         _print({"ok": True, "skipped": "ya enviado en esta sesión", "marker": str(marker)})
         return 0
     to = mailer.recipient(a.to)
-    html_p, text_p = o / ("alert.html" if a.kind == "alert" else "report.html"), \
-        o / ("alert.txt" if a.kind == "alert" else "report.txt")
+    stem = a.kind if a.kind in ("alert", "addendum") else "report"
+    html_p, text_p = o / f"{stem}.html", o / f"{stem}.txt"
     if not html_p.exists():
-        raise SystemExit("Primero ejecuta build (o alert)")
-    subj = json.loads((o / ("alert.json" if a.kind == "alert" else "build.json")).read_text(encoding="utf-8"))["subject"]
+        raise SystemExit("Primero ejecuta build (o alert/addendum)")
+    meta = o / ("build.json" if stem == "report" else f"{stem}.json")
+    subj = json.loads(meta.read_text(encoding="utf-8"))["subject"]
     if a.at:
         waited = mailer.wait_until(timing.at_et(_day(a), a.at))
         log.add("send_wait", target=a.at, waited_s=round(waited, 1))
@@ -301,6 +302,7 @@ def cmd_addendum(a) -> int:
         f"Sesgo: {x['bias']}\n" + "\n".join(f"Fuente: {s['name']} {s['url']}" for s in x["sources"]) for x in items)
     (o / "addendum.html").write_text(html, encoding="utf-8")
     (o / "addendum.txt").write_text(text, encoding="utf-8")
+    (o / "addendum.json").write_text(json.dumps({"subject": subj}, ensure_ascii=False), encoding="utf-8")
     RunLog(w / "runlog.jsonl").add("addendum_built", items=len(items), warnings=len(tri["warnings"]))
     _print({"subject": subj, "items": len(items), "unconfirmed_dropped": len(tri["unconfirmed"]),
             "warnings": tri["warnings"], "html": str(o / "addendum.html"), "text": str(o / "addendum.txt")})
@@ -335,7 +337,7 @@ def main(argv=None) -> int:
     p.add_argument("--backend", default="resend", choices=["resend", "gmail_connector"])
     p.add_argument("--to")
     p.add_argument("--at", help="HH:MM[:SS] ET; espera hasta esa hora si es futura")
-    p.add_argument("--kind", default="report", choices=["report", "test", "alert"])
+    p.add_argument("--kind", default="report", choices=["report", "test", "alert", "addendum"])
     p.add_argument("--force", action="store_true")
     p = sub.add_parser("record-sent")
     p.add_argument("--backend", default="gmail_connector")

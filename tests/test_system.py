@@ -300,3 +300,42 @@ def test_J_dst_transitions():
     mon2 = timing.at_et(dt.date(2027, 11, 8), "09:00")
     assert timing.to_mx(fri2).strftime("%H:%M") == "07:00"
     assert timing.to_mx(mon2).strftime("%H:%M") == "08:00"
+
+
+# ---------------------------------------------------------------- G (simulado). Envío Resend
+def test_G_resend_payload_and_idempotency(tmp_path, monkeypatch):
+    w, o = _build(tmp_path)
+    monkeypatch.setenv("RESEND_API_KEY", "re_test_dummy")
+    monkeypatch.setenv("PMI_RECIPIENT", "destino@example.com")
+    sent = []
+
+    def fake_post(url, payload, headers, timeout=30):
+        sent.append((url, payload, headers))
+        return 200, {"id": "email_123"}
+    monkeypatch.setattr(mailer, "post_json", fake_post)
+    base = ["--work", str(w), "--out", str(o), "--date", "2026-11-24"]
+    assert cli.main(base + ["send", "--backend", "resend"]) == 0
+    url, payload, headers = sent[0]
+    assert url == "https://api.resend.com/emails"
+    assert payload["to"] == ["destino@example.com"] and payload["html"].startswith("<!DOCTYPE html>")
+    assert payload["text"] and payload["subject"].startswith("PREMARKET | S&P 500 | 24-NOV-2026")
+    assert headers["Idempotency-Key"] == "pmi-2026-11-24-report"
+    assert cli.main(base + ["send", "--backend", "resend"]) == 0   # segundo intento: omitido
+    assert len(sent) == 1
+
+
+def test_I_resend_auth_error_not_retried(monkeypatch):
+    monkeypatch.setenv("RESEND_API_KEY", "re_bad")
+    calls = []
+    monkeypatch.setattr(mailer, "post_json", lambda *a, **k: calls.append(1) or (401, {"message": "API key is invalid"}))
+    r = mailer.send_resend(to="a@b.co", subject="s", html="h", text="t", idem_key="k")
+    assert r["ok"] is False and r["http"] == 401 and len(calls) == 1
+
+
+def test_I_resend_transient_retry(monkeypatch):
+    monkeypatch.setenv("RESEND_API_KEY", "re_ok")
+    seq = iter([(503, {}), (200, {"id": "e1"})])
+    monkeypatch.setattr(mailer, "post_json", lambda *a, **k: next(seq))
+    monkeypatch.setattr(mailer.time, "sleep", lambda s: None)
+    r = mailer.send_resend(to="a@b.co", subject="s", html="h", text="t", idem_key="k")
+    assert r["ok"] and r["provider_id"] == "e1"

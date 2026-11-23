@@ -2,7 +2,8 @@
 
 Sistema autónomo que, cada día con sesión regular en NYSE, investiga el contexto mundial
 relevante para el S&P 500 y envía un informe HTML por Gmail antes de la apertura
-(objetivo 08:59 ET = 07:59 CDMX en EDT / 08:59 CDMX en EST).
+(envío programado 08:59:15 ET = 06:59 CDMX en EDT / 07:59 CDMX en EST; en Gmail llega
+antes de las 09:00 ET salvo retrasos de la plataforma).
 
 ## Arquitectura
 
@@ -16,13 +17,16 @@ Tarea programada en la nube de Claude (CRON_TZ=America/New_York, L–V 07:47)
        ├─ Claude: WebSearch/WebFetch → investigación, verificación y análisis en español
        ├─ pmi/news.py            reglas de fiabilidad, fusión de duplicados, orden por nivel
        ├─ pmi/render.py          HTML con estilos inline (Gmail) + texto plano
-       └─ Conector Gmail (OAuth): create_draft → send_message(draftId) a las 08:59:15 ET
+       ├─ pmi/mailer.py          envío por API de Resend a las 08:59:15 ET (Idempotency-Key)
+       └─ Conector Gmail (solo lectura): reporte previo y control de duplicados
 Tarea vigilante (L–V 09:12 ET): si no hay reporte de hoy en Gmail → correo de FALLO.
 ```
 
 - No depende de tu computadora ni de una conversación abierta.
-- El destinatario está en el mensaje privado de la tarea, no en el repo.
-- Sin secretos en el código: Gmail usa el OAuth del conector de Claude.
+- Secretos solo en variables de entorno del entorno de Claude: `RESEND_API_KEY` y
+  `PMI_RECIPIENT` (tu correo). Nada de eso está en el repo ni en los mensajes de las tareas.
+- Remitente: `onboarding@resend.dev` (plan gratuito: solo puede enviar al correo con el
+  que abriste la cuenta de Resend). Para otro remitente/destinatario: verificar un dominio.
 
 ## Operación
 
@@ -49,15 +53,18 @@ Tarea vigilante (L–V 09:12 ET): si no hay reporte de hoy en Gmail → correo d
 
 - La hora de envío depende del arranque de la tarea programada (normalmente segundos o
   pocos minutos de variación). El vigilante alerta si no llega.
-- El conector de Gmail debe tener `send_message` (y `create_draft`) en "Permitir siempre";
-  si pide aprobación, la ejecución automática no puede enviar.
+- Si faltan las variables de entorno, el reporte se genera pero no se puede enviar, y
+  el vigilante tampoco puede alertar por correo (queda en el historial de la tarea).
+- La primera vez, revisa que el correo de `onboarding@resend.dev` no caiga en Spam (si
+  cae, márcalo como "No es spam" o crea un filtro en Gmail).
 - Las cotizaciones de premarket solo aparecen si una fuente pública verificable muestra
   valor y hora; si no, se omiten. Los cierres FRED son del día hábil previo.
-- El corte del reporte principal es ~08:40–08:48 ET (el HTML se carga en un borrador
-  antes de enviarlo); lo material posterior hasta 08:58 sale como adenda de ÚLTIMA HORA.
+- Corte de información ~08:57 ET; lo material posterior al envío y antes de las 09:10
+  puede salir como adenda de ÚLTIMA HORA.
 
 ## Costos
 
-Ninguno adicional: usa tu plan de Claude (tareas programadas y conectores), Gmail y
-fuentes públicas gratuitas (FRED, Forex Factory, sitios oficiales). Cada ejecución
-consume uso de tu plan de Claude.
+Ninguno adicional: plan gratuito de Resend (100 correos/día, 3,000/mes; se usan ~1–2
+por día hábil), tu plan de Claude (tareas programadas y conectores) y fuentes públicas
+gratuitas (FRED, Forex Factory, sitios oficiales). Cada ejecución consume uso de tu plan
+de Claude.

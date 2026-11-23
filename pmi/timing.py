@@ -52,10 +52,10 @@ PHASES = [
     ("start", "INICIO: preflight, calendario económico, datos FRED"),
     ("research_until", "INVESTIGACIÓN AMPLIA (noticias desde el cierre anterior)"),
     ("macro_release_check", "ESPERAR/CAPTURAR datos de las 8:30 ET"),
-    ("compose_by", "REDACTAR report.json final y construir HTML"),
-    ("draft_by", "BORRADOR creado en Gmail; BARRIDO de última hora (adenda solo si es material)"),
-    ("info_cutoff", "CORTE: preparar envío del borrador (y adenda si aplica)"),
-    ("send_target", "ENVIAR borrador ahora"),
+    ("compose_by", "REDACTAR report.json y build (versión enviable)"),
+    ("draft_by", "BARRIDO final de última hora; actualizar report.json y rebuild"),
+    ("info_cutoff", "CORTE: build final y lanzar send --at 08:59:15"),
+    ("send_target", "ENVIAR ahora (send sin --at)"),
     ("hard_deadline", "ENVÍO TARDÍO: enviar de inmediato (marcar retraso)"),
 ]
 

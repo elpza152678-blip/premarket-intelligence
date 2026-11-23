@@ -7,9 +7,9 @@
     "task_start_et": "07:47",
     "research_until_et": "08:30",
     "macro_release_check_et": "08:31",
-    "compose_by_et": "08:40",
+    "compose_by_et": "08:45",
     "draft_by_et": "08:50",
-    "info_cutoff_et": "08:58",
+    "info_cutoff_et": "08:57",
     "send_target_et": "08:59:15",
     "hard_deadline_et": "09:10",
     "watchdog_et": "09:12"
@@ -18,11 +18,13 @@
     "subject_template": "PREMARKET | S&P 500 | {date} | Inteligencia de Mercados",
     "addendum_subject_template": "ÚLTIMA HORA | PREMARKET S&P 500 | {date}",
     "backend_order": [
-      "gmail_connector",
       "resend"
     ],
     "resend_from": "Premarket Intelligence <onboarding@resend.dev>",
-    "gmail_flow": "create_draft antes de draft_by; send_message(draftId) en send_target; adenda de última hora como respuesta en el hilo"
+    "secrets_env": [
+      "RESEND_API_KEY",
+      "PMI_RECIPIENT"
+    ]
   },
   "sources": {
     "forexfactory_feed": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
