@@ -35,10 +35,14 @@ def get(url: str, *, timeout: float = 20, retries: int = 2, backoff: float = 5,
     raise last or FetchError(url)
 
 
+# Resend (Cloudflare) rechaza con 403 el agente genérico de Python; FRED rechaza los personalizados.
+POST_UA = "premarket-intelligence/1.0"
+
+
 def post_json(url: str, payload: dict, headers: dict, timeout: float = 30) -> tuple[int, dict]:
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(url, data=data, method="POST", headers={
-        "Content-Type": "application/json", "User-Agent": UA, **headers})
+        "Content-Type": "application/json", "User-Agent": POST_UA, **headers})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return r.status, json.loads(r.read() or b"{}")
