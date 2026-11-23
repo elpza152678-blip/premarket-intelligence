@@ -10,8 +10,8 @@ Suite automática: `python -m pytest -q tests` → **36 pruebas OK**.
 | D. Duplicados | OK | Fusión por clave, URL o similitud. **Bug real encontrado y corregido:** un blog en vivo con una sola URL fusionaba 5 noticias distintas |
 | E. Pendiente → publicado | OK | PENDIENTE antes de la hora; "PUBLICADO · real N/D" sin dato verificado (nunca se estima); PUBLICADO con dato oficial |
 | F. HTML / Gmail | OK | Sin `<style>`/`<script>`/imágenes; enlaces http(s); 35 noticias con resúmenes largos ≈ 92 KB (< límite de recorte de Gmail de 102 KB) con compactación automática; **ajustes:** tabla de calendario rediseñada para móvil (390 px), espacios entre etiquetas conservados |
-| G. Envío real | OK (Gmail) · pendiente (Resend) | Correo `[PRUEBA]` enviado el 23-nov 18:43:35 UTC, aceptado (SENT + INBOX). El envío diario será por Resend: probado con simulaciones (carga, Idempotency-Key, sin duplicados); el envío real queda pendiente de que configures la clave |
-| H. Nube sin tu computadora | Pendiente | Se verifica con la primera ejecución de la tarea programada (o "Ejecutar ahora") |
+| G. Envío real | OK | 23-nov: correo `[PRUEBA]` vía Gmail (18:43 UTC) y, ya con Resend desde el entorno Default de la nube, alerta de prueba aceptada (HTTP 200) y entregada (status delivered) en Recibidos. Corregido: Resend rechazaba con 403 el agente de usuario genérico de Python |
+| H. Nube sin tu computadora | OK | Ejecución en la nube: clonó el repo, preflight, Gmail (lectura) y envío por Resend con variables del entorno Default. Las tareas tipo chat no ven esas variables: las definitivas son las creadas desde Claude Code |
 | I. Fallos | OK | Forex Factory caído → "Calendario no disponible"; clave inválida 401 → sin reintentos; 503 → reintento; programador tardío → envío inmediato; segundo envío → omitido |
 | J. Cambios de horario | OK | 14-mar-2027: 07:47 ET pasa de 12:47 a 11:47 UTC (06:47 → 05:47 CDMX); 7-nov-2027 vuelve a EST |
 
