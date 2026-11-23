@@ -1,0 +1,50 @@
+{
+  "system_name": "PREMARKET INTELLIGENCE — S&P 500",
+  "recipient_env": "PMI_RECIPIENT",
+  "timezone_market": "America/New_York",
+  "timezone_display": "America/Mexico_City",
+  "schedule": {
+    "task_start_et": "07:47",
+    "research_until_et": "08:30",
+    "macro_release_check_et": "08:31",
+    "compose_by_et": "08:40",
+    "draft_by_et": "08:50",
+    "info_cutoff_et": "08:58",
+    "send_target_et": "08:59:15",
+    "hard_deadline_et": "09:10",
+    "watchdog_et": "09:12"
+  },
+  "email": {
+    "subject_template": "PREMARKET | S&P 500 | {date} | Inteligencia de Mercados",
+    "addendum_subject_template": "ÚLTIMA HORA | PREMARKET S&P 500 | {date}",
+    "backend_order": [
+      "gmail_connector",
+      "resend"
+    ],
+    "resend_from": "Premarket Intelligence <onboarding@resend.dev>",
+    "gmail_flow": "create_draft antes de draft_by; send_message(draftId) en send_target; adenda de última hora como respuesta en el hilo"
+  },
+  "sources": {
+    "forexfactory_feed": "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
+    "forexfactory_page": "https://www.forexfactory.com/calendar",
+    "fred_csv": "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}",
+    "nyse_calendar": "https://www.nyse.com/markets/hours-calendars"
+  },
+  "fred_series": {
+    "DGS10": "Treasury 10Y (constant maturity, cierre oficial)",
+    "DGS2": "Treasury 2Y (constant maturity, cierre oficial)",
+    "VIXCLS": "VIX (cierre CBOE vía FRED)",
+    "DCOILWTICO": "WTI spot Cushing (EIA vía FRED)",
+    "SP500": "S&P 500 índice spot (cierre, vía FRED)"
+  },
+  "calendar_currencies_focus": [
+    "USD",
+    "EUR",
+    "JPY",
+    "GBP",
+    "CNY",
+    "CAD",
+    "CHF",
+    "AUD"
+  ]
+}

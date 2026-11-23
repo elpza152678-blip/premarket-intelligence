@@ -1,0 +1,7 @@
+{"fetched_at": "2026-11-24T12:00:00+00:00", "source": "fixture", "events": [
+ {"title": "Unemployment Claims", "country": "USD", "date": "2026-11-24T08:30:00-05:00", "impact": "High", "forecast": "225K", "previous": "220K"},
+ {"title": "CB Consumer Confidence", "country": "USD", "date": "2026-11-24T10:00:00-05:00", "impact": "High", "forecast": "95.0", "previous": "94.6"},
+ {"title": "German ifo Business Climate", "country": "EUR", "date": "2026-11-24T04:00:00-05:00", "impact": "Medium", "forecast": "", "previous": "87.0"},
+ {"title": "Bank Holiday", "country": "JPY", "date": "2026-11-24T00:00:00-05:00", "impact": "Holiday", "forecast": "", "previous": ""},
+ {"title": "Core PCE Price Index m/m", "country": "USD", "date": "2026-11-25T08:30:00-05:00", "impact": "High", "forecast": "0.2%", "previous": "0.3%"}
+]}

@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-24",
+  "cutoff_et": "2026-11-24T08:58:00-05:00",
+  "partial": false,
+  "sources_consulted_count": 12,
+  "sources_failed": ["forexfactory.com (HTML 403; se usó el feed JSON)"],
+  "notes": ["FIXTURE DE PRUEBA — contenido ficticio para validar el render."],
+  "executive_summary": {
+    "overview": "FIXTURE DE PRUEBA. Los futuros operan con cautela antes de un dato de inflación; el mercado sigue sensible a los rendimientos del Treasury y a resultados de tecnología.",
+    "bullish": ["Guidance de ejemplo por encima del consenso en semiconductores."],
+    "bearish": ["Rendimiento a 10 años de ejemplo cerca de máximos recientes."],
+    "uncertain": ["Dato de ejemplo PCE pendiente a las 10:00 ET."]
+  },
+  "market": [
+    {"group": "Premarket / tiempo cercano", "label": "Futuros E-mini S&P 500 (ESZ6)", "value": "6,900.00",
+     "change": "+0.30%", "timestamp": "08:45 ET", "source": "Fuente de ejemplo", "url": "https://example.com/es",
+     "note": "Contrato de futuros, no índice spot"},
+    {"label": "Sin timestamp (debe omitirse)", "value": "1", "source": "x"}
+  ],
+  "news": [
+    {"title": "EJEMPLO: Empresa A supera estimaciones y eleva guidance", "level": "ALTO", "category": "Resultados",
+     "summary": "FIXTURE. La empresa reportó ingresos y utilidad por acción por encima del consenso y elevó su guía anual. El texto existe solo para comprobar la longitud del resumen, la jerarquía visual y el formato de las tarjetas de noticias del informe.",
+     "why_it_matters": "Peso relevante en el índice y señal sobre demanda de IA.", "bias": "alcista",
+     "bias_detail": "Positivo para semiconductores; riesgo de 'vender la noticia'.", "status": "confirmado",
+     "event_time": "24-nov 07:05 ET", "published_time": "07:10 ET", "event_key": "empresa-a-q3",
+     "sources": [{"name": "Comunicado IR (ejemplo)", "url": "https://example.com/ir/q3", "verified": true}],
+     "confidence_fact": "alta", "confidence_impact": "media"},
+    {"title": "EJEMPLO: Empresa A eleva su guidance anual tras superar estimaciones", "level": "CRÍTICO",
+     "category": "Resultados", "summary": "Duplicado para probar la fusión.", "why_it_matters": "x",
+     "bias": "alcista", "status": "confirmado", "event_time": "07:05 ET",
+     "sources": [{"name": "Reuters (ejemplo)", "url": "https://example.com/reuters/a", "verified": true}]},
+    {"title": "EJEMPLO: Rumor en redes sobre fusión", "level": "ALTO", "summary": "Sin verificar.",
+     "status": "confirmado", "sources": [{"name": "X/Twitter", "url": "https://example.com/post", "verified": false}]}
+  ],
+  "unconfirmed": [],
+  "calendar_updates": [
+    {"match": "Unemployment Claims", "country": "USD", "actual": "999K", "source": "DOL (ejemplo)",
+     "url": "https://www.dol.gov/ui/data.pdf", "surprise": "Ejemplo: por encima del consenso"}
+  ],
+  "calendar_extra": [],
+  "catalysts": [{"time": "10:00 ET", "title": "EJEMPLO: dato de confianza", "detail": "Texto de prueba."}],
+  "conclusion": {"priced_in": "Ejemplo.", "could_change": "Ejemplo.", "volatility_focus": "Ejemplo.",
+                 "open_uncertainties": "Ejemplo."}
+}
